@@ -75,9 +75,7 @@ def parse(file):
                 parsed[i] = tuple(parts_a)
             else:
                 if instr == "PUSH":
-                    raise NasbtE8rror(f"ARGUMENT FOR PUSH IS A NON-NUMBER: {arg}")
-                elif instr == "COMPARE" or instr == "!COMPARE":
-                    raise NasbtError(f"TRIED TO USE {instr} WITH A NON-NUMBER")
+                    raise NasbtError(f"ARGUMENT FOR PUSH IS A NON-NUMBER: {arg}")
         elif instr in instrs[1][1]:
             if instr == "MOVE":
                 if arg == "LEFT" or arg == "RIGHT":
@@ -93,7 +91,7 @@ def parse(file):
                 if len(parts) == 3 and is_number(parts[1]):
                     parsed[i] = (instr, int(parts[1]), None)
                 elif len(parts) == 3 and is_number(parts_b[0], parts_b[2]):
-                    if not parts_b[1] == "IF" or parts_b[1] == "IFNOT":
+                    if not parts_b[1] in ("IF", "IFNOT"):
                         raise NasbtError(f"INVALID CONDITION FOR JUMP: {parts_b[1]}")
                     else:
                         parsed[i] = (instr, int(parts_b[0]), parts_b[1], int(parts_b[2]), None)
@@ -233,6 +231,8 @@ def main(argv):
                 print("FILE NOT FOUND")
             except PermissionError:
                 print("PERMISSION DENIED")
+            except NasbtError as e:
+                print(e)
 
 if __name__ == "__main__":
     main(sys.argv)
