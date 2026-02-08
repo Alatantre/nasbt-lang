@@ -86,7 +86,6 @@ def parse(file):
             parsed[i] = (instr, parts[1], None)
         elif instr in instrs[2]:
             parts_b = arg.split(" ")
-            print(parts_b)
             if instr == "JUMP":
                 if len(parts) == 3 and is_number(parts[1]):
                     parsed[i] = (instr, int(parts[1]), None)
