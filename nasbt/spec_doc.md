@@ -6,8 +6,8 @@ A vomit of INTERCAL, Brainfuck and BASIC.
 
 ***
 
-NASBT is a *stack-based language*, the stack is a list of numbers that can be manipulated throughout the code
-The pointer is used to change, output, etc. the stack
+NASBT is a *stack-based language*, the stack is a list of numbers that can be manipulated throughout the code, the pointer is used to change, output, etc. the stack, it's position can be changed.
+
 The amount of numbers in the stack is changeable too
 
 NASBT's file extension is .nsbt or .nasbt
