@@ -1,6 +1,5 @@
 import sys
 from random import randint
-from datetime import datetime, time
 
 VERSION = "NASBT V1.0.2hf — TURTLE"
 
@@ -112,7 +111,7 @@ def parse(file):
                 else:
                     raise NasbtError(f"ARGUMENTS FOR RAND MISSING, EXPECTED 2")
                     
-            print(parsed)
+            
     return parsed
 
 def execute(parsed_lines):
