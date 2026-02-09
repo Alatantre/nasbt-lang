@@ -73,8 +73,12 @@ f - bugfix
 
 p - patch
 
-ft - new features
-
 q - quality of life
+
+hf - hotfix
+
+r - revision
+
+ft - new features
 
 xp - experimental
