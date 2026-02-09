@@ -2,7 +2,7 @@ import sys
 from random import randint
 from datetime import datetime, time
 
-VERSION = "NASBT V1.0 — TURTLE (RELEASE)"
+VERSION = "NASBT V1.0.1f — TURTLE"
 
 class NasbtError(Exception):
     pass
