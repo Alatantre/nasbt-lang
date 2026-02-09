@@ -80,6 +80,6 @@ hf - hotfix
 
 r - revision
 
-ft - new features
+mu - minor update
 
 xp - experimental
