@@ -69,6 +69,8 @@ def parse(file):
             parsed[i] = (instr, None)
         elif line.startswith(";"):
             parsed[i] = ("INSTRUCTION", None)
+        elif line == "":
+            parsed[i] = ("INSTRUCTION", None)
         elif instr in instrs[1][0]:
             if is_number(arg):
                 parts_a = [instr, int(arg)]
