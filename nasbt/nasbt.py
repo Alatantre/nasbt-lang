@@ -2,12 +2,12 @@ import sys
 from random import randint
 from datetime import datetime, time
 
-VERSION = "NASBT V1.0.1f — TURTLE"
+VERSION = "NASBT V1.0.2hf — TURTLE"
 
 class NasbtError(Exception):
     pass
 
-def is_number(*x):
+def is_number(*x):  
     try:
         for i in x:
             int(i)
@@ -29,6 +29,7 @@ instrs = (
         "LENGTH",
         "STACK",
         "TELEPORT",
+        "INSTRUCTION",
         "HALT"
     ),
     ( # SINGLE ARG INSTRUCTIONS
@@ -68,7 +69,7 @@ def parse(file):
         if instr in instrs[0]:
             parsed[i] = (instr, None)
         elif line.startswith(";"):
-            parsed[0] = (line, None)
+            parsed[i] = ("INSTRUCTION", None)
         elif instr in instrs[1][0]:
             if is_number(arg):
                 parts_a = [instr, int(arg)]
@@ -102,7 +103,16 @@ def parse(file):
                             if part != "IF" or part != "IFNOT":
                                 if not is_number(part):
                                     raise NasbtError(f"INVALID ARG FOR JUMP: {part}")
-            
+            elif instr == "RAND":
+                if len(parts_b) == 2:
+                    if is_number(parts_b[0], parts_b[1]):
+                        parsed[i] = (instr, int(parts_b[0]), int(parts_b[1]), None)
+                    else:
+                        raise NasbtError(f"ONE/BOTH ARGUMENTS FOR RAND ARE/IS INVALID: {parts_b[0], parts_b[1]}")
+                else:
+                    raise NasbtError(f"ARGUMENTS FOR RAND MISSING, EXPECTED 2")
+                    
+            print(parsed)
     return parsed
 
 def execute(parsed_lines):
@@ -198,14 +208,13 @@ def execute(parsed_lines):
                 min_ = parts[1]
                 max_ = parts[2]
                 try:
-                    stack.append(min_, max_)
+                    stack.append(randint(min_, max_))
                 except ValueError:
-                    stack.append(min_, max_)
+                    stack.append(randint(max_, min_))
             elif instr == "INSTRUCTION": # most useful instr oat
                 pass
-            elif instr.startswith(";"):
-                pass
-            
+            else:
+                raise NasbtError(f"UNKNOWN INSTRUCTION: {instr}")
             ip += 1
         except NasbtError as e:
             print(f"ERROR IN LINE {ip}: {e}")
