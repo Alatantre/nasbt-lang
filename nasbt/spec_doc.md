@@ -1,4 +1,4 @@
-# NASBT SPEC DOC — EDITION 1T
+# NASBT SPEC DOC — EDITION 2T
 NASBT is an esoteric programming language, kinda
 A vomit of INTERCAL, Brainfuck and BASIC.
 
