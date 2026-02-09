@@ -65,3 +65,16 @@ HALT - Stops the program's execution
 RAND (min) (max) - Adds a random value between min and max to the stack
 
 INSTRUCTION - Does nothing
+
+***
+
+# Version suffixes
+f - bugfix
+
+p - patch
+
+ft - new features
+
+q - quality of life
+
+xp - experimental
