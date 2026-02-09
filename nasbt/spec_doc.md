@@ -1,8 +1,8 @@
 # NASBT SPEC DOC — EDITION 2T
 NASBT is an esoteric programming language, kinda
-A vomit of INTERCAL, Brainfuck and BASIC.
+A vomit of INTERCAL, Brainfuck and BASIC
 
-> Made for fun.
+Made for fun
 
 ***
 
@@ -11,7 +11,8 @@ NASBT is a *stack-based language*, the stack is a list of numbers that can be ma
 The amount of numbers in the stack is changeable too
 
 NASBT's file extension is .nsbt or .nasbt
-The code is executed line-by-line
+
+the code is executed line-by-line
 
 ***
 
@@ -68,7 +69,7 @@ INSTRUCTION - Does nothing
 
 ***
 
-# Version suffixes
+# VERSION SUFFIXES
 f - bugfix
 
 p - patch
