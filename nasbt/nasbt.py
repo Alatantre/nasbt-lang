@@ -141,6 +141,7 @@ def execute(parsed_lines):
                     raise NasbtError("TRIED TO REMOVE A VALUE WHEN STACK WAS EMPTY")
             elif instr == "CLEAR":
                 stack.clear()
+                ptr = 0
             elif instr == "INPUT":
                 user_input = input()
                 
