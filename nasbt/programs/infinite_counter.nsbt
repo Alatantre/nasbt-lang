@@ -1,0 +1,10 @@
+PUSH 0
+PUSH 10
+STACK
+MOVE RIGHT
+OUTPUT
+MOVE LEFT
+INCREMENT
+JUMP 3
+; wow this really counts
+; until the end of time..
