@@ -1,0 +1,6 @@
+PUSH 0
+RAND 0 255
+INCREMENT
+JUMP 2 IFNOT 10
+STACK
+; random bullshit go
