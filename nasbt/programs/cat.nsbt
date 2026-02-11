@@ -1,0 +1,20 @@
+; the cat goes meow
+PUSH 62
+PUSH 32
+OUTPUT
+MOVE RIGHT
+OUTPUT
+CLEAR
+INPUT
+PUSH -1
+
+; echoing the input
+OUTPUT
+MOVE RIGHT
+JUMP 12 IFNOT -1
+CLEAR
+PUSH 10
+OUTPUT
+CLEAR
+JUMP 2
+; the cat goes meow again
