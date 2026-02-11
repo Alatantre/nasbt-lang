@@ -1,0 +1,12 @@
+; setup
+PUSH 1
+PUSH 1
+STACK
+
+; adding the numbers together
+DECREMENT
+MOVE RIGHT
+INCREMENT
+MOVE LEFT
+JUMP 7 IFNOT 0
+STACK
