@@ -220,7 +220,10 @@ def execute(parsed_lines):
             elif instr == "BOTTOM":
                 ptr = 0
             elif instr == "TELEPORT":
-                ptr = stack[ptr] % len(stack)
+                if stack:
+                    ptr = stack[ptr] % len(stack)
+                else:
+                    raise NasbtError("TRIED TO TELEPORT WHEN THE STACK WAS EMPTY")
             
             # CONTROL FLOW
             elif instr == "JUMP":
