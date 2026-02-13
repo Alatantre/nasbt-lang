@@ -86,7 +86,7 @@ def parse(file):
                 if instr == "PUSH":
                     raise NasbtError(f"ARGUMENT FOR PUSH IS A NON-NUMBER: {arg}")
         elif instr in instrs[1][1]:
-            if len(parts) == 2:
+            if len(parts) == 3:
                 if instr == "MOVE":
                     if not arg in ("LEFT", "RIGHT"):
                         raise NasbtError(f"ARGUMENT FOR MOVE IS INVALID: {arg}")
@@ -94,7 +94,7 @@ def parse(file):
                     if not arg in ("ASCII", "NUMERIC"):
                         raise NasbtError(f"ARGUMENT FOR INPUT IS INVALID: {arg}")
             else:
-                print(f"ARGUMENTS FOR {instr} MISSING, EXPECTED 1")
+                raise NasbtError(f"ARGUMENTS FOR {instr} MISSING, EXPECTED 1")
             parsed[i] = (instr, parts[1], None)
         elif instr in instrs[2]:
             parts_b = arg.split(" ")
@@ -220,10 +220,7 @@ def execute(parsed_lines):
             elif instr == "BOTTOM":
                 ptr = 0
             elif instr == "TELEPORT":
-                if stack:
-                    ptr = stack[ptr] % len(stack)
-                else:
-                    raise NasbtError("TRIED TO TELEPORT WHEN THE STACK WAS EMPTY")
+                ptr = stack[ptr] % len(stack)
             
             # CONTROL FLOW
             elif instr == "JUMP":
@@ -288,6 +285,12 @@ def main(argv):
             except FileNotFoundError:
                 print(f"FILE {argv[1]} NOT FOUND")
             except PermissionError:
+                print("PERMISSION DENIED")
+            except NasbtError as e:
+                print(f"ERROR IN LINE {j}: {e}")
+
+if __name__ == "__main__":
+    main(sys.argv):
                 print("PERMISSION DENIED")
             except NasbtError as e:
                 print(f"ERROR IN LINE {j}: {e}")
