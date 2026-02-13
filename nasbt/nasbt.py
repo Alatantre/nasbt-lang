@@ -293,10 +293,4 @@ def main(argv):
                 print(f"ERROR IN LINE {j}: {e}")
 
 if __name__ == "__main__":
-    main(sys.argv):
-                print("PERMISSION DENIED")
-            except NasbtError as e:
-                print(f"ERROR IN LINE {j}: {e}")
-
-if __name__ == "__main__":
     main(sys.argv)
