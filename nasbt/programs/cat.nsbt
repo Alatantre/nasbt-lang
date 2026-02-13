@@ -5,7 +5,7 @@ OUTPUT
 MOVE RIGHT
 OUTPUT
 CLEAR
-INPUT
+INPUT ASCII
 PUSH -1
 
 ; echoing the input
