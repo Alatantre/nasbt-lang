@@ -1,7 +1,8 @@
 import sys
 from random import randint
 
-VERSION = "NASBT V1.0.2hf — TURTLE"
+VERSION = "NASBT V1.0.3mu — TURTLE"
+
 
 class NasbtError(Exception):
     pass
@@ -20,7 +21,6 @@ instrs = (
         "REMOVE",
         "TOP",
         "BOTTOM",
-        "INPUT",
         "OUTPUT",
         "CLEAR",
         "INCREMENT",
@@ -28,6 +28,10 @@ instrs = (
         "LENGTH",
         "STACK",
         "TELEPORT",
+        "DUP",
+        "SWAP",
+        "PEEK",
+        "DUMP",
         "INSTRUCTION",
         "HALT"
     ),
@@ -36,6 +40,7 @@ instrs = (
             "PUSH",
         ),
         ( # TEXT BASED ARGS
+            "INPUT",
             "MOVE",
             "MESSAGE",
             "ERROR"
@@ -60,6 +65,8 @@ def parse(file):
     
     parsed = {}
     for i, line in enumerate(lines, 1):
+        global j
+        j = i
         parts = line.split(" ", 1)
         parts.append(None)
         instr = parts[0]
@@ -79,12 +86,15 @@ def parse(file):
                 if instr == "PUSH":
                     raise NasbtError(f"ARGUMENT FOR PUSH IS A NON-NUMBER: {arg}")
         elif instr in instrs[1][1]:
-            if instr == "MOVE":
-                if arg == "LEFT" or arg == "RIGHT":
-                    pass
-                else:
-                    raise NasbtError(f"ARGUMENT FOR MOVE IS INVALID: {arg}")
-                    
+            if len(parts) == 2:
+                if instr == "MOVE":
+                    if not arg in ("LEFT", "RIGHT"):
+                        raise NasbtError(f"ARGUMENT FOR MOVE IS INVALID: {arg}")
+                elif instr == "INPUT":
+                    if not arg in ("ASCII", "NUMERIC"):
+                        raise NasbtError(f"ARGUMENT FOR INPUT IS INVALID: {arg}")
+            else:
+                print(f"ARGUMENTS FOR {instr} MISSING, EXPECTED 1")
             parsed[i] = (instr, parts[1], None)
         elif instr in instrs[2]:
             parts_b = arg.split(" ")
@@ -99,9 +109,11 @@ def parse(file):
                 else:
                     if len(parts) == 1:
                         raise NasbtError("ARGUMENTS FOR JUMP MISSING, EXPECTED AT LEAST 1")
+                    elif len(parts) == 3:
+                        raise NasbtError("ARGUMENTS FOR JUMP MISSING, EXPECTED A THIRD ARG")
                     else:
                         for part in parts_b:
-                            if part != "IF" or part != "IFNOT":
+                            if not part in ("IF", "IFNOT"):
                                 if not is_number(part):
                                     raise NasbtError(f"INVALID ARG FOR JUMP: {part}")
             elif instr == "RAND":
@@ -112,6 +124,8 @@ def parse(file):
                         raise NasbtError(f"ONE/BOTH ARGUMENTS FOR RAND ARE/IS INVALID: {parts_b[0], parts_b[1]}")
                 else:
                     raise NasbtError(f"ARGUMENTS FOR RAND MISSING, EXPECTED 2")
+        else:
+            raise NasbtError(f"UNKNOWN INSTRUCTION: {instr}")
                     
             
     return parsed
@@ -124,19 +138,36 @@ def execute(parsed_lines):
     
     while ip <= max_line:
         parts = parsed_lines[ip]
-        instr = parts[0].upper()
+        instr = parts[0]
         try:
             # CORE/BASIC INSTRUCTIONS
             if instr == "PUSH":
                 stack.append(parts[1])
+            elif instr == "DUP":
+                if stack:
+                    stack.append(stack[ptr])
+                else:
+                    raise NasbtError("TRIED TO DUPLICATE A VALUE WHEN STACK WAS EMPTY")
+            elif instr == "SWAP":
+                if stack:
+                    if len(stack) > 1:
+                        stack[0], stack[len(stack) - 1] = stack[len(stack) - 1], stack[0]
+                    else:
+                        raise NasbtError("TRIED TO SWAP WHEN THERE WAS ONLY ONE VALUE IN THE STACK")
+                else:
+                    raise NasbtError("TRIED TO SWAP WHEN THE STACK WAS EMPTY")
             elif instr == "POP":
                 if stack:
                     stack.pop()
+                    if len(stack) > 2:
+                        ptr = ptr % len(stack)
                 else:
                     raise NasbtError("TRIED TO POP A VALUE WHEN STACK WAS EMPTY")
             elif instr == "REMOVE":
                 if stack:
                     stack.pop(ptr)
+                    if len(stack) > 2:
+                        ptr = ptr % len(stack)
                 else:
                     raise NasbtError("TRIED TO REMOVE A VALUE WHEN STACK WAS EMPTY")
             elif instr == "CLEAR":
@@ -146,11 +177,24 @@ def execute(parsed_lines):
                 user_input = input()
                 
                 if user_input:
-                    for char in user_input:
-                        stack.append(ord(char))
+                    if parts[1] == "ASCII":
+                        for char in user_input:
+                            stack.append(ord(char))
+                    elif parts[1] == "NUMERIC":
+                        if is_number(user_input):
+                            stack.append(int(user_input))
+                        else:
+                            raise NasbtError("INPUT IS NOT A NUMBER")
             elif instr == "OUTPUT":
                 if stack:
                     print(chr(stack[ptr]), end="", flush=True)
+                else:
+                    raise NasbtError("TRIED TO OUTPUT A VALUE WHEN STACK WAS EMPTY")
+            elif instr == "PEEK":
+                if stack:
+                    print(stack[ptr], end="", flush=True)
+                else:
+                    raise NasbtError("TRIED TO PEEK AT A VALUE WHEN STACK WAS EMPTY")
             elif instr == "MESSAGE":
                 print(parts[1], end="", flush=True)
             elif instr == "INCREMENT":
@@ -161,6 +205,8 @@ def execute(parsed_lines):
                     stack[ptr] -= 1
             elif instr == "STACK":
                 print(stack, end="", flush=True)
+            elif instr == "DUMP":
+                print(f"STACK: {stack} | POINTER POS: {ptr} ({stack[ptr] if stack else ''})", end="", flush=True)
             
             # POINTER MOVEMENT
             elif instr == "MOVE":
@@ -215,8 +261,7 @@ def execute(parsed_lines):
                     stack.append(randint(max_, min_))
             elif instr == "INSTRUCTION": # most useful instr oat
                 pass
-            else:
-                raise NasbtError(f"UNKNOWN INSTRUCTION: {instr}")
+            
             ip += 1
         except NasbtError as e:
             print(f"ERROR IN LINE {ip}: {e}")
@@ -238,11 +283,11 @@ def main(argv):
             try:
                 execute(parse(argv[1]))
             except FileNotFoundError:
-                print("FILE NOT FOUND")
+                print(f"FILE {argv[1]} NOT FOUND")
             except PermissionError:
                 print("PERMISSION DENIED")
             except NasbtError as e:
-                print(e)
+                print(f"ERROR IN LINE {j}: {e}")
 
 if __name__ == "__main__":
     main(sys.argv)
