@@ -5,5 +5,6 @@ the spec doc is in the nasbt folder
 in my very professional opinion it's very fun to mess with
 
 DEAD PROJECT
+maybe I'll come back to it some time
 
 🐢
